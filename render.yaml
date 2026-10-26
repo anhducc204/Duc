@@ -1,0 +1,41 @@
+# FREE INITIAL DEPLOYMENT DRAFT. Saving this file does not provision a service.
+# The Free instance has no persistent disk. Restarts/redeploys/spin-downs erase
+# its temporary files and job history; this is an initial trial configuration.
+# Optional paid persistence is in render.persistent.yaml and needs budget approval.
+services:
+  - type: web
+    name: downvideo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    numInstances: 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: DOWNVIDEO_PUBLIC
+        value: "1"
+      - key: DOWNVIDEO_DATA_ROOT
+        value: /tmp/downvideo
+      - key: DOWNVIDEO_MAX_ACTIVE
+        value: "1"
+      - key: DOWNVIDEO_MAX_FILE_MB
+        value: "512"
+      - key: DOWNVIDEO_MAX_STORAGE_MB
+        value: "1024"
+      - key: DOWNVIDEO_RETENTION_HOURS
+        value: "1"
+      - key: DOWNVIDEO_MAX_JOB_SECONDS
+        value: "900"
+      - key: DOWNVIDEO_MAX_QUEUE
+        value: "20"
+      - key: DOWNVIDEO_ACCESS_USER
+        value: owner
+      - key: DOWNVIDEO_ACCESS_PASSWORD
+        generateValue: true
+    # RENDER_EXTERNAL_URL supplies the exact HTTPS origin automatically.
+    # Free compute can still incur usage charges for bandwidth/build overages
+    # if a payment method exists. Review workspace usage/spend controls in Render.
+

@@ -1,0 +1,14 @@
+.runtime/
+.data/
+downloads/
+__pycache__/
+*.pyc
+*.log
+.qa/
+.env
+.env.*
+!.env.example
+deploy-artifact/
+*.zip
+tempCodeRunnerFile.*
+

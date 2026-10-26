@@ -1,0 +1,23 @@
+{
+    admin off
+}
+
+# DOMAIN is a public hostname without a scheme or path, e.g. video.example.com.
+# DNS must point to this VPS and inbound TCP 80/443 must reach Caddy.
+{$DOMAIN} {
+    encode zstd gzip
+
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+
+    reverse_proxy app:8765 {
+        # Preserve the actual client Host, including any port. Do not replace it
+        # with app:8765 or localhost; the backend validates the public origin.
+        header_up Host {hostport}
+        # Origin and Authorization are passed through unchanged by default.
+        # Never forge or remove Origin to work around the backend's checks.
+    }
+}
+

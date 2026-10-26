@@ -1,0 +1,40 @@
+# OPTIONAL PAID DEPLOYMENT DRAFT: a persistent disk requires a paid Render web service.
+# Review/choose the compute plan and disk cost in Render before approving deployment.
+# No resources are created by saving this file.
+# Use this instead of render.yaml only after budget approval, never import both.
+# Current plan reference: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: downvideo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Paid draft: 1 CPU / 2 GB gives two worker processes more headroom than 512 MB.
+    plan: 1c-2g
+    numInstances: 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    disk:
+      name: downvideo-data
+      mountPath: /var/data
+      sizeGB: 10
+    # Verify the mounted disk is writable by container UID/GID 10001 on first deploy.
+    # Build-time ownership of /var/data alone does not verify a provider-mounted disk.
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: DOWNVIDEO_PUBLIC
+        value: "1"
+      - key: DOWNVIDEO_DATA_ROOT
+        value: /var/data
+      - key: DOWNVIDEO_MAX_ACTIVE
+        value: "2"
+      - key: DOWNVIDEO_MAX_STORAGE_MB
+        value: "8192"
+      - key: DOWNVIDEO_ACCESS_USER
+        value: owner
+      - key: DOWNVIDEO_ACCESS_PASSWORD
+        generateValue: true
+    # The server reads RENDER_EXTERNAL_URL automatically for its exact public origin.
+    # If adding a custom domain, configure DOWNVIDEO_PUBLIC_ORIGIN with its https:// URL.
+

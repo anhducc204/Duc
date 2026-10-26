@@ -1,0 +1,7 @@
+Options -Indexes
+DirectoryIndex index.html
+<FilesMatch "^(.*\.py|.*\.ya?ml|Dockerfile|Caddyfile|requirements\.txt|.*\.md|start\.bat|start\.ps1|\.env.*)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 403 ^/DownVideo/(\.runtime|\.data|\.qa|downloads|__pycache__)(/|$)
+
